@@ -1,6 +1,6 @@
 const db = require('../../data/dbConfig');
 
-module.exports = { get, add, getById, remove };
+module.exports = { get, add, getById, remove, update };
 
 function get() {
   return db('cars');
@@ -22,4 +22,11 @@ function remove(id) {
   return db('cars')
     .where({ id })
     .del();
+}
+
+function update(id, car) {
+  return db('cars')
+    .where({ id })
+    .update(car)
+    .then(() => getById(id));
 }
