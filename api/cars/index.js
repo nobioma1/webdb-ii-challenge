@@ -1,6 +1,6 @@
 const express = require('express');
 const carsDb = require('./carsDbHelper');
-const { validateCar } = require('./carsMiddleware');
+const { validateCar, validateCarId } = require('./carsMiddleware');
 
 const cars = express.Router();
 
@@ -22,6 +22,15 @@ cars.post('/', validateCar, async (req, res) => {
       return res.status(400).json({ message: 'Car already Exists' });
     }
     return res.status(500).json({ error: 'Error adding cars' });
+  }
+});
+
+cars.delete('/:id', validateCarId, async (req, res) => {
+  try {
+    await carsDb.remove(req.car.id);
+    res.status(204).end();
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting car' });
   }
 });
 
