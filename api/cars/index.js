@@ -16,7 +16,7 @@ cars.get('/', async (req, res) => {
 cars.post('/', validateCar, async (req, res) => {
   try {
     const cars = await carsDb.add(req.body);
-    res.status(200).json(cars);
+    res.status(201).json(cars);
   } catch (error) {
     if (error.errno === 19) {
       return res.status(400).json({ message: 'Car already Exists' });
@@ -31,6 +31,16 @@ cars.delete('/:id', validateCarId, async (req, res) => {
     res.status(204).end();
   } catch (error) {
     res.status(500).json({ error: 'Error deleting car' });
+  }
+});
+
+cars.put('/:id', validateCarId, validateCar, async (req, res) => {
+  const { body, car: { id } } = req;
+  try {
+    const car = await carsDb.update(id, body);
+    res.status(200).json(car);
+  } catch (error) {
+    res.status(500).json({ error: 'Error updating Car' });
   }
 });
 
